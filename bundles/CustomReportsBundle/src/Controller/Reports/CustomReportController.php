@@ -362,7 +362,11 @@ class CustomReportController extends UserAwareController
     public function chartAction(Request $request): JsonResponse
     {
         $this->checkPermission('reports');
-        $config = Tool\Config::getByName($request->request->getString('name'));
+        $configName = $request->request->getString('name');
+        if (empty($configName)) {
+            $configName = $request->query->getString('name');
+        }
+        $config = Tool\Config::getByName($configName);
         if (!$config) {
             throw $this->createNotFoundException();
         }
